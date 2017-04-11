@@ -22,4 +22,9 @@ public class SceneChanger : MonoBehaviour {
 		SceneManager.LoadScene ("Title");
 	}
 
+	public void OnTuto()
+	{
+		SceneManager.LoadScene ("Tutorial");
+	}
+
 }
