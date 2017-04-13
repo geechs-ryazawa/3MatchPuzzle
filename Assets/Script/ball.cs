@@ -15,6 +15,7 @@ public class ball : MonoBehaviour {
 	private bool isEnd = false;
 	public static bool isFinish = false;
 	public static bool isPose = false;
+	private bool isSkill = false;
 
 	private int maxTime = 60;
 	private float timeCounter = 60f;
@@ -264,24 +265,10 @@ public class ball : MonoBehaviour {
 
 			skillCounter = 0;
 
+			exp.GetComponent<Animation> ().Play ();
 			exp.Play ();
-			this.gameObject.GetComponent<AudioSource> ().PlayOneShot (se [1]);
 
-			skillImg.fillAmount = 0f;
-
-			Collider2D[] targets = Physics2D.OverlapCircleAll (new Vector2 (0f, 0f), 1.5f);
-
-			for (int i = 0; i < targets.Length; i++) {
-				GameObject cs = Instantiate (bigCrush) as GameObject;
-				cs.transform.position = targets [i].transform.position;
-				cs.GetComponent<Renderer> ().material = crystalList [Random.Range(0,5)];
-				Destroy (targets [i].gameObject);
-			}
-
-			scoreCount += targets.Length;
-			score.text = scoreCount.ToString ();
-
-			StartCoroutine (DropBall (targets.Length));
+			Invoke ("explosion", 1f);
 
 		}
 	}
@@ -298,4 +285,26 @@ public class ball : MonoBehaviour {
 				}
 			}
 	}
+
+	private void explosion()
+	{
+		this.gameObject.GetComponent<AudioSource> ().PlayOneShot (se [1]);
+
+		skillImg.fillAmount = 0f;
+
+		Collider2D[] targets = Physics2D.OverlapCircleAll (new Vector2 (0f, 0f), 1.5f);
+
+		for (int i = 0; i < targets.Length; i++) {
+			GameObject cs = Instantiate (bigCrush) as GameObject;
+			cs.transform.position = targets [i].transform.position;
+			cs.GetComponent<Renderer> ().material = crystalList [Random.Range (0, 5)];
+			Destroy (targets [i].gameObject);
+		}
+
+		scoreCount += targets.Length;
+		score.text = scoreCount.ToString ();
+
+		StartCoroutine (DropBall (targets.Length));
+	}
+
 }
