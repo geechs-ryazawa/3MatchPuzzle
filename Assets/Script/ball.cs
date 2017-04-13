@@ -40,6 +40,13 @@ public class ball : MonoBehaviour {
 	[Header("ゲームポーズ用モーダル")]
 	[SerializeField] private GameObject poseModal = null;
 
+	[Header("破裂演出用パーティクル")]
+	[SerializeField] private GameObject crush = null;
+	[SerializeField] private GameObject bigCrush = null;
+
+	[Header("マテリアルリスト")]
+	[SerializeField] private Material[] crystalList = null;
+
 	public static int scoreCount = 0;
 
 	private int skillCounter = 0;
@@ -47,6 +54,9 @@ public class ball : MonoBehaviour {
 	List<GameObject> removableBallList = new List<GameObject>();
 	
 	void Start () {
+
+		scoreCount = 0;
+
 		timer.text = maxTime.ToString ();
 		score.text = "0";
 		StartCoroutine (CountDownTimer ());
@@ -151,6 +161,9 @@ public class ball : MonoBehaviour {
 		remove_cnt = removableBallList.Count;
 		if (remove_cnt >= 3) {
 			for (int i = 0; i < remove_cnt; i++) {
+				GameObject cs = Instantiate (crush) as GameObject;
+				cs.transform.position = removableBallList [i].transform.position;
+				cs.GetComponent<Renderer> ().material = crystalList [Random.Range(0,5)];
 				Destroy (removableBallList [i]);
 			}
 
@@ -182,7 +195,7 @@ public class ball : MonoBehaviour {
 			int spriteId = Random.Range(0, 5);
 			ball.name = "BALL" + spriteId;
 			SpriteRenderer spriteObj = ball.GetComponent<SpriteRenderer>();
-			spriteObj.sprite = ballSprites[spriteId];
+			spriteObj.sprite= ballSprites[spriteId];
 
 //			if (remove_cnt > 6) {
 //
@@ -259,6 +272,9 @@ public class ball : MonoBehaviour {
 			Collider2D[] targets = Physics2D.OverlapCircleAll (new Vector2 (0f, 0f), 1.5f);
 
 			for (int i = 0; i < targets.Length; i++) {
+				GameObject cs = Instantiate (bigCrush) as GameObject;
+				cs.transform.position = targets [i].transform.position;
+				cs.GetComponent<Renderer> ().material = crystalList [Random.Range(0,5)];
 				Destroy (targets [i].gameObject);
 			}
 
